@@ -6,13 +6,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   </head>
   <body>
-    <div id="terminal">
+    <div id="terminal" style="font-family: 'Press Start 2P'">
     </div>
     <button onclick="writeTerminal('Poops')">Botton</button>
     <script>
       const terminal = document.getElementById("terminal");
       function writeTerminal(string) {
-        terminal.innerHTML += `<br>${string}`
+        terminal.innerHTML += `${string}<br>`
       } 
     </script>
   </body>
