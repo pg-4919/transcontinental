@@ -22,8 +22,11 @@
     <button onclick="writeTerminal('Poops')">Botton</button>
     <script>
       const terminal = document.getElementById("terminal");
+      const container = document.getElementById("container");
+      
       function writeTerminal(string) {
-        terminal.innerHTML += `${string}<br>`
+        terminal.innerHTML += `${string}<br>`;
+        container.scrollTop = container.scrollHeight;
       }
     </script>
   </body>
