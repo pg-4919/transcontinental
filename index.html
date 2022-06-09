@@ -4,16 +4,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+      .terminal {
+        max-height: calc("100vh-1em");
+        background-color: lightgray;
+      }
+    </style>
   </head>
   <body>
-    <div id="terminal" style="font-family: 'Press Start 2P'">
+    <div class="terminal" id="terminal" style="font-family: 'Press Start 2P'">
     </div>
     <button onclick="writeTerminal('Poops')">Botton</button>
     <script>
       const terminal = document.getElementById("terminal");
       function writeTerminal(string) {
         terminal.innerHTML += `${string}<br>`
-      } 
+      }
     </script>
   </body>
 </html>
