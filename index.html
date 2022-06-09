@@ -5,14 +5,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
+      .container {
+        max-height: 100vh;
+        overflow: scroll;
+      }
       .terminal {
-        max-height: calc("100vh-1em");
         background-color: lightgray;
       }
     </style>
   </head>
   <body>
-    <div class="terminal" id="terminal" style="font-family: 'Press Start 2P'">
+    <div class="container">
+      <div class="terminal" id="terminal" style="font-family: 'Press Start 2P'">
+      </div>
     </div>
     <button onclick="writeTerminal('Poops')">Botton</button>
     <script>
