@@ -29,6 +29,7 @@
       }
       
       terminal.addEventListener("keydown", event => {
+        alert(JSON.stringify(event));
         terminal.innerHTML += event.char;
       })
     </script>
