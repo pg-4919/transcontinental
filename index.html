@@ -11,7 +11,7 @@
       }
       .terminal {
         overflow: scroll;
-        height: 90vh;
+        height: 100vh;
         background-color: lightgray;
       }
     </style>
@@ -19,16 +19,18 @@
   <body>
       <div class="terminal" id="terminal" style="font-family: 'Press Start 2P'">
       </div>
-      <button onclick="writeTerminal('Poops')">Botton</button>
     </div>
     <script>
       const terminal = document.getElementById("terminal");
-      const container = document.getElementById("container");
       
       function writeTerminal(string) {
         terminal.innerHTML += `${string}<br>`;
         terminal.scrollTop = terminal.scrollHeight;
       }
+      
+      terminal.addEventListener("keydown", event => {
+        terminal.innerHTML += event.char;
+      })
     </script>
   </body>
 </html>
