@@ -10,7 +10,8 @@
         padding: 0;
       }
       .terminal {
-        overflow: scroll;
+        overflow-y: scroll;
+        overflow-x: wrap;
         height: 100vh;
         background-color: lightgray;
       }
@@ -30,9 +31,9 @@
       
       document.addEventListener("keydown", event => {
         let char = String.fromCharCode(event.keyCode);
-        if (!char.match(/[A-Z]/i)) return;
+        if (!char.match(/[A-Z|0-9]/i)) return;
         else if (!event.shiftKey) char = char.toLowerCase();
-        alert(char);
+        writeTerminal(string);
       });
     </script>
   </body>
