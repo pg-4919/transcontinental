@@ -28,10 +28,10 @@
         terminal.scrollTop = terminal.scrollHeight;
       }
       
-      terminal.addEventListener("keydown", event => {
+      document.addEventListener("keydown", event => {
         alert(JSON.stringify(event));
         terminal.innerHTML += event.char;
-      })
+      });
     </script>
   </body>
 </html>
