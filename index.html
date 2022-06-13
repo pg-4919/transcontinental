@@ -29,7 +29,10 @@
       }
       
       document.addEventListener("keydown", event => {
-        alert(String.fromCharCode(event.keyCode));
+        let char = String.fromCharCode(event.keyCode));
+        if (!char.match(/[A-Z]/i)) return;
+        else if (!event.shiftKey) char = char.toLowerCase();
+        alert(char);
       });
     </script>
   </body>
