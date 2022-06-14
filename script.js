@@ -38,15 +38,14 @@ const dialogues = {
         text: "What is your name? ",
         process: input => {
             playerName = input;
-            return "immigrant_joke"
+            return "immigrant_begin"
         },
         valid: char => (char.match(/^[\x00-\x7F]*$/) && currentInput.length < 9)
     },
-    immigrant_joke: {
-        template: true,
-        empty: true,
-        text: "`Name: ${playerName}<br><br>Social Security number? (optional, for better graphics) `",
-        process: input => "immigrant_joke",
+    immigrant_begin: {
+        confirm: true,
+        text: "As a Chinese immigrant, you will have to lay 690 miles of rails from Sacramento, California, to Promontory, Utah.<br><br>Each month, you will be asked a question about the time period. If you answer correctly, you will increase your chance to experience a lucky event which will speed up construction.<br><br>If you answer incorrectly, you lay 25% less track and increase your chance of an unlucky event.<br><br>Press ENTER to continue.",
+        process: input => "immigrant_question",
         valid: char => (char.match(/^\d+$/) && currentInput.length < 9)
     },
     veteran_name: {
