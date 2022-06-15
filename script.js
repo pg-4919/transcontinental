@@ -590,7 +590,6 @@ function processInput() {
 }
 
 document.addEventListener("keydown", event => {
-    if (!songApproved) document.getElementById("song").play();
     const char = event.key;
     //console.log(char);
 
@@ -603,5 +602,6 @@ document.addEventListener("keydown", event => {
 
 window.addEventListener("load", () => {
     //console.log("READY!");
+    document.getElementById("song").play();
     updateTerminal();
 });
