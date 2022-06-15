@@ -7,10 +7,35 @@ let trackLength = 0;
 let currentQuestion;
 let lockGeneration = false;
 let month = 0;
+let negativeMeter = 0;
+let positiveMeter = 0;
 
 function evaluateGeneric(vals, fn) {
     return fn.apply(null, vals);
 }
+
+const negativeEventsImmigrant = [
+    {
+        text: "Your team was caught in a snowdrift!<br><br>Lose 1 month.",
+        time: 1,
+        rails: 0
+    },
+    {
+        text: "A massive rockslide damaged your latest section of track<br><br>Lose 5 miles.",
+        time: 1,
+        rails: 5
+    },
+    {
+        text: "You meet an impassable mountain! You have to use risky explosives to get through.<br><br>Lose 2 months.",
+        time: 2,
+        rails: 0
+    },
+    {
+        text: "One of your explosive crates went off, damaging the track as well as injuring your workers.<br><br>Lose 1 month and 1 mile of rails.",
+        time: 1,
+        rails: 1
+    },
+]
 
 const questions_4 = [
     {
@@ -72,18 +97,144 @@ const questions_4 = [
         choices: [
             "Taking the issue to the Supreme Court",
             "Sabotaging the railroad and attacking white settlements", "Helping provide supplies and food to the builders",
-            "Staying neutral on the condition that the railroad not disrupt their way of life." ],
+            "Staying neutral on the condition that the railroad not disrupt their way of life."
+        ],
         correct: 2
     },
     {
         question: "How did Native Americans react to the railroad?",
         choices: [
             "Taking the issue to the Supreme Court",
-            "Sabotaging the railroad and attacking white settlements", "Helping provide supplies and food to the builders",
-            "Staying neutral on the condition that the railroad not disrupt their way of life." ],
+            "Helping provide supplies and food to the builders",
+            "Sabotaging the railroad and attacking white settlements",
+            "Staying neutral on the condition that the railroad not disrupt their way of life."
+        ],
+        correct: 3
+    },
+    {
+        question: "How much were Chinese workers paid?",
+        choices: [
+            "$1 per day",
+            "$5 per day",
+            "$10 per day",
+            "$69 per day"
+        ],
+        correct: 1
+    },
+    {
+        question: "Why did Chinese workers come to the U.S?",
+        choices: [
+            "Freedom and the American Dream",
+            "Developments in transportation technology",
+            "Religious persecution",
+            "New opportunities in the Gold Rush"
+        ],
+        correct: 4
+    },
+    {
+        question: "What were Chinese workers called?",
+        choices: [
+            "Orientals",
+            "Sojourners",
+            "Chinamen (now a racial slur)",
+            "All of the above"
+        ],
+        correct: 4
+    },
+    {
+        question: "Why did the Irish immigrate to the U.S?",
+        choices: [
+            "Religious conflicts",
+            "Lack of political autonomy",
+            "Dire economic conditions",
+            "All of the above"
+        ],
+        correct: 4
+    },
+    {
+        question: "How did the railroad affect the ecosystem of the Great Plains?",
+        choices: [
+            "Chinese workers brought kuzdu vine, an invasive species",
+            "Railroad companies enlisted hunters to wipe out bison herds",
+            "The railroad allowed tumbleweed to spread across the plains",
+            "Irish workers popularized the potato"
+        ],
         correct: 2
     },
+    {
+        question: "What did the Chinese Exclusion Act do?",
+        choices: [
+            "Excluded Chinese people from restaurants and shops, similar to segregation",
+            "Banned Chinese immigrants from obtaining citizenship",
+            "Prohibited the immigration of Chinese laborers",
+            "Enforced lower wages for Chinese workers"
+        ],
+        correct: 3
+    },
+    {
+        question: "When was the Chinese Exclusion Act passed?",
+        choices: [ "1882", "1883", "1884", "1885" ],
+        correct: 1
+    },
 ];
+
+const questions_2 = [
+    {
+        question: "Which railroad company started on the east?",
+        choices: [ "Union Pacific", "Central Pacific" ],
+        correct: 2
+    },
+    {
+        question: "Which railroad company started on the west?",
+        choices: [ "Union Pacific", "Central Pacific" ],
+        correct: 1
+    },
+    {
+        question: "Which railroad company mainly employed the Irish?",
+        choices: [ "Union Pacific", "Central Pacific" ],
+        correct: 1
+    },
+    {
+        question: "Which railroad company mainly employed the Chinese?",
+        choices: [ "Union Pacific", "Central Pacific" ],
+        correct: 2
+    },
+    {
+        question: "Were the majority of workers on the railroad immigrants?",
+        choices: [ "Yes", "No" ],
+        correct: 1
+    },
+    {
+        question: "Which railroad company ran into issues with Native Americans?",
+        choices: [ "Union Pacific", "Central Pacific" ],
+        correct: 1
+    },
+    {
+        question: "Which railroad company ran into issues with the local terrain?",
+        choices: [ "Union Pacific", "Central Pacific" ],
+        correct: 2
+    },
+    {
+        question: "After the railroad companies finished construction, did they stop building railroads?",
+        choices: [ "Yes", "No" ],
+        correct: 2
+    },
+    {
+        question: "Which railroad company had to build 690 miles of track?",
+        choices: [ "Union Pacific", "Central Pacific" ],
+        correct: 2
+    },
+    {
+        question: "Which railroad company had to build 1086 miles of track?",
+        choices: [ "Union Pacific", "Central Pacific" ],
+        correct: 1
+    },
+    {
+        question: "Is the railroad still in operation today?",
+        choices: [ "Yes", "No" ],
+        correct: 1
+    },
+]
 
 const dialogues = {
     opening: {
@@ -135,11 +286,22 @@ const dialogues = {
         },
         valid: char => (char.match(/[1-4]/i) && currentInput.length == 0)
     },
+    immigrant_question_2: {
+        template: true,
+        text: "`${generateQuestionTwo()}`",
+        process: input => {
+            lockGeneration = false;
+            if (currentQuestion.correct == input) return "immigrant_right"
+            else return "immigrant_wrong"
+        },
+        valid: char => (char.match(/[1-2]/i) && currentInput.length == 0)
+    },
     immigrant_wrong: {
         template: true,
         confirm: true,
-        text: "`Sorry, the correct answer was ${currentQuestion.choices[currentQuestion.correct - 1]} <br><br><br>Press ENTER to continue.`",
+        text: "`Sorry, the correct answer was \"${currentQuestion.choices[currentQuestion.correct - 1]}\" <br><br><br>Press ENTER to continue.`",
         process: input => {
+            negativeMeter++;
             trackLength += 20 * 0.75;
             month++;
             return "immigrant_month"
@@ -149,8 +311,9 @@ const dialogues = {
     immigrant_right: {
         template: true,
         confirm: true,
-        text: "`${currentQuestion.choices[currentQuestion.correct - 1]} was the correct option! <br><br><br>Press ENTER to continue.`",
+        text: "`\"${currentQuestion.choices[currentQuestion.correct - 1]}\" was the correct option! <br><br><br>Press ENTER to continue.`",
         process: input => {
+            positiveMeter++;
             trackLength += 20;
             month++;
             return "immigrant_month"
@@ -162,10 +325,24 @@ const dialogues = {
         confirm: true,
         text: "`You are currently at month ${month}, with ${trackLength} miles done. You have ${690 - trackLength} to go.<br><br>CA ${generateTrackProgress(690)}<br><br><br>Press ENTER to continue.`",
         process: input => {
-            return "immigrant_question_4";
+            if (Math.random())
+            if (Math.random() > 0.33) return "immigrant_question_4";
+            else return "immigrant_question_2";
         },
         valid: char => false
     },
+    immigrant_event: {
+        template: true,
+        confirm: true,
+        text: "`${generateNegativeEventImmigrant()}`",
+        process: input => true,
+        valid: char => false
+    },
+
+
+
+
+
     veteran_name: {
         text: "What is your name? ",
         process: input => {
@@ -193,11 +370,22 @@ const dialogues = {
         },
         valid: char => (char.match(/[1-4]/i) && currentInput.length == 0)
     },
+    veteran_question_2: {
+        template: true,
+        text: "`${generateQuestionTwo()}`",
+        process: input => {
+            lockGeneration = false;
+            if (currentQuestion.correct == input) return "veteran_right"
+            else return "veteran_wrong"
+        },
+        valid: char => (char.match(/[1-2]/i) && currentInput.length == 0)
+    },
     veteran_wrong: {
         template: true,
         confirm: true,
-        text: "`Sorry, the correct answer was ${currentQuestion.choices[currentQuestion.correct - 1]} <br><br><br>Press ENTER to continue.`",
+        text: "`Sorry, the correct answer was \"${currentQuestion.choices[currentQuestion.correct - 1]}\" <br><br><br>Press ENTER to continue.`",
         process: input => {
+            negativeMeter++;
             trackLength += 40 * 0.75;
             month++;
             return "veteran_month"
@@ -207,8 +395,9 @@ const dialogues = {
     veteran_right: {
         template: true,
         confirm: true,
-        text: "`${currentQuestion.choices[currentQuestion.correct - 1]} was the correct option! <br><br><br>Press ENTER to continue.`",
+        text: "`\"${currentQuestion.choices[currentQuestion.correct - 1]} was the correct option!\" <br><br><br>Press ENTER to continue.`",
         process: input => {
+            positiveMeter++;
             trackLength += 40;
             month++;
             return "veteran_month"
@@ -220,10 +409,38 @@ const dialogues = {
         confirm: true,
         text: "`You are currently at month ${month}, with ${trackLength} miles done. You have ${1086 - trackLength} to go.<br><br>CA ${generateTrackProgress(1086)}<br><br><br>Press ENTER to continue.`",
         process: input => {
-            return "veteran_question_4";
+            if (Math.random() > 0.25) return "veteran_question_4";
+            else return "veteran_question_2";
         },
         valid: char => false
     },
+}
+
+function weightedRand(spec) {
+    var i, j, table=[];
+    for (i in spec) {
+        // The constant 10 below should be computed based on the
+        // weights in the spec for a correct and optimal table size.
+        // E.g. the spec {0:0.999, 1:0.001} will break this impl.
+        for (j=0; j<spec[i]*10; j++) {
+            table.push(i);
+        }
+    }
+    return function() {
+        return table[Math.floor(Math.random() * table.length)];
+    }
+}
+
+function generateEventImmigrant() {
+    if (positiveMeter > 6) {
+        
+    }
+    if (negativeMeter > 5) {
+        const currentEvent = negativeEventsImmigrant[Math.floor(Math.random() * 4)];
+        trackLength -= currentEvent.rails;
+        months += currentEvent.time;
+        return `${currentEvent.text}<br><br><br>Press ENTER to continue.`;
+    }
 }
 
 function generateTrackProgress(total) {
@@ -247,6 +464,21 @@ function generateQuestionFour() {
     if (previousQuestion == currentQuestion) currentQuestion = questions_4[index + 1] || questions_4[index - 1];
 
     return `${currentQuestion.question}<br><br>&ensp; 1. ${currentQuestion.choices[0]}<br>&ensp; 2. ${currentQuestion.choices[1]}<br>&ensp; 3. ${currentQuestion.choices[2]}<br>&ensp; 4. ${currentQuestion.choices[3]}<br><br>What is your choice? `;
+}
+
+function generateQuestionTwo() {
+    if (lockGeneration) {
+        return `${currentQuestion.question}<br><br>&ensp; 1. ${currentQuestion.choices[0]}<br>&ensp; 2. ${currentQuestion.choices[1]}<br><br>What is your choice? `;
+    }
+
+    lockGeneration = true;
+    const previousQuestion = currentQuestion;
+    const index = Math.floor(Math.random() * questions_2.length)
+    currentQuestion = questions_2[index];
+
+    if (previousQuestion == currentQuestion) currentQuestion = questions_2[index + 1] || questions_2[index - 1];
+
+    return `${currentQuestion.question}<br><br>&ensp; 1. ${currentQuestion.choices[0]}<br>&ensp; 2. ${currentQuestion.choices[1]}<br><br>What is your choice? `;
 }
 
 function updateTerminal() {
