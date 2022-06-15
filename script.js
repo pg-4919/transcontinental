@@ -10,6 +10,7 @@ let month = 0;
 let negativeMeter = 0;
 let positiveMeter = 0;
 let currentEvent;
+let songApproved = false;
 
 function evaluateGeneric(vals, fn) {
     return fn.apply(null, vals);
@@ -589,6 +590,7 @@ function processInput() {
 }
 
 document.addEventListener("keydown", event => {
+    if (!songApproved) document.getElementById("song").play();
     const char = event.key;
     //console.log(char);
 
