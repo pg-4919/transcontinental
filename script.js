@@ -130,10 +130,7 @@ try {
         veteran_begin: {
             confirm: true,
             text: "As a Civil War veteran, you will have to lay 1086 miles of rails from Omaha, Nebraska, to Promontory, Utah. You will have to endure Native American raids and powerful thunderstorms.<br><br>Each month, you will be asked a question about the time period. If you answer correctly, you will increase your chance to experience a lucky event which will speed up construction.<br><br>If you answer incorrectly, you lay 25% less track and increase your chance of an unlucky event which will slow you down.<br><br>To speed up the game, you will build twice as fast as the real Union Pacific.<br><br><br>Press ENTER to continue.",
-            process: input => {
-                //console.log(lockGeneration)
-                return "veteran_question_4"
-            },
+            process: "veteran_question_4",
             valid: char => false
         },
         veteran_question_4: {
@@ -317,8 +314,7 @@ try {
     }
 
     function processInput() {
-        //console.log("processInput")
-        if (current.input === "" && (!dialogues[current.dialogue].confirm || dialogues[current.dialogue].empty)) return;
+        //if (current.input === "" && (!dialogues[current.dialogue].confirm || dialogues[current.dialogue].empty)) return;
         current.dialogue = dialogues[current.dialogue].process(current.input);
         current.input = "";
         updateTerminal();
