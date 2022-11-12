@@ -598,6 +598,11 @@ try {
     }
 
     document.addEventListener("keydown", event => {
+        if (!musicApproved) {
+            const audio = new Audio("song.mp3");
+            audio.loop = true;
+            audio.addEventListener("canplaythrough", () => audio.play());
+        }
         const char = event.key;
         //console.log(char);
 
@@ -609,7 +614,7 @@ try {
     });
 
     window.addEventListener("load", updateTerminal);
-    
+
 } catch (err) {
     alert(err);
 }
