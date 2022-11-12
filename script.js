@@ -1,7 +1,6 @@
 try {
     const terminal = document.getElementById("terminal");
 
-    let currentDialogue = "opening";
     let playerName = "";
     let trackLength = 0;
     let currentQuestion;
