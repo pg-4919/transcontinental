@@ -2,16 +2,21 @@ try {
     const terminal = document.getElementById("terminal");
 
     let currentDialogue = "opening";
-    let currentInput = "";
     let playerName = "";
     let trackLength = 0;
     let currentQuestion;
     let lockGeneration = false;
-    let month = 0;
-    let negativeMeter = 0;
-    let positiveMeter = 0;
     let currentEvent;
     let songApproved = false;
+
+    const meters = { positive: 0, negative: 0 };
+    const current = {
+        dialogue: opening,
+        input: "",
+        track: 0,
+        month: 0,
+        question
+    };
 
     function evaluateGeneric(vals, fn) {
         return fn.apply(null, vals);
@@ -21,12 +26,12 @@ try {
         opening: {
             text: "THE TRANSCONTINENTAL RAILROAD<br><br>You may:<br><br>&ensp; 1. Build the railroad<br>&ensp; 2. Learn about the railroad<br><br>What is your choice? ",
             process: input => (["build", "learn"])[parseInt(input) - 1],
-            valid: char => (char.match(/[1-2]/i) && currentInput.length == 0)
+            valid: char => (char.match(/[1-2]/i) && current.input.length == 0)
         },
         build: {
             text: "Many kinds of people helped build the Transcontinental Railroad.<br><br>You may: <br><br>&ensp; 1. Be an immigrant from China<br>&ensp; 2. Be a veteran of the Civil War<br>&ensp; 3. Find out the differences between these choices<br><br>What is your choice? ",
             process: input => (["immigrant_name", "veteran_name", "differences"])[parseInt(input) - 1],
-            valid: char => (char.match(/[1-3]/i) && currentInput.length == 0)
+            valid: char => (char.match(/[1-3]/i) && current.input.length == 0)
         },
         learn: {
             confirm: true,
@@ -46,7 +51,7 @@ try {
                 playerName = input;
                 return "immigrant_begin"
             },
-            valid: char => (char.match(/^[\x00-\x7F]*$/) && currentInput.length < 9)
+            valid: char => (char.match(/^[\x00-\x7F]*$/) && current.input.length < 9)
         },
         immigrant_begin: {
             confirm: true,
@@ -65,7 +70,7 @@ try {
                 if (currentQuestion.correct == input) return "immigrant_right"
                 else return "immigrant_wrong"
             },
-            valid: char => (char.match(/[1-4]/i) && currentInput.length == 0)
+            valid: char => (char.match(/[1-4]/i) && current.input.length == 0)
         },
         immigrant_question_2: {
             template: true,
@@ -75,16 +80,16 @@ try {
                 if (currentQuestion.correct == input) return "immigrant_right"
                 else return "immigrant_wrong"
             },
-            valid: char => (char.match(/[1-2]/i) && currentInput.length == 0)
+            valid: char => (char.match(/[1-2]/i) && current.input.length == 0)
         },
         immigrant_wrong: {
             template: true,
             confirm: true,
             text: "`Sorry, the correct answer was \"${currentQuestion.choices[currentQuestion.correct - 1]}\" <br><br><br>Press ENTER to continue.`",
             process: input => {
-                negativeMeter++;
+                meters.negative++;
                 trackLength += 20 * 0.75;
-                month++;
+                current.month++;
                 return "immigrant_month"
             },
             valid: char => false
@@ -94,9 +99,9 @@ try {
             confirm: true,
             text: "`\"${currentQuestion.choices[currentQuestion.correct - 1]}\" was the correct option! <br><br><br>Press ENTER to continue.`",
             process: input => {
-                positiveMeter++;
+                meters.positive++;
                 trackLength += 20;
-                month++;
+                current.month++;
                 return "immigrant_month"
             },
             valid: char => false
@@ -104,7 +109,7 @@ try {
         immigrant_month: {
             template: true,
             confirm: true,
-            text: "`You are currently at month ${month}, with ${trackLength} miles done. You have ${((690 - trackLength) > 0) ? 690 - trackLength : 'no more'} to go.<br><br>CA ${generateTrackProgress(690)}<br><br><br>Press ENTER to continue.`",
+            text: "`You are currently at month ${current.month}, with ${trackLength} miles done. You have ${((690 - trackLength) > 0) ? 690 - trackLength : 'no more'} to go.<br><br>CA ${generateTrackProgress(690)}<br><br><br>Press ENTER to continue.`",
             process: input => {
                 if (trackLength >= 690) return "end";
                 else return generateEventImmigrant();
@@ -124,7 +129,7 @@ try {
                 playerName = input;
                 return "veteran_begin"
             },
-            valid: char => (char.match(/^[\x00-\x7F]*$/) && currentInput.length < 9)
+            valid: char => (char.match(/^[\x00-\x7F]*$/) && current.input.length < 9)
         },
         veteran_begin: {
             confirm: true,
@@ -143,7 +148,7 @@ try {
                 if (currentQuestion.correct == input) return "veteran_right"
                 else return "veteran_wrong"
             },
-            valid: char => (char.match(/[1-4]/i) && currentInput.length == 0)
+            valid: char => (char.match(/[1-4]/i) && current.input.length == 0)
         },
         veteran_question_2: {
             template: true,
@@ -153,16 +158,16 @@ try {
                 if (currentQuestion.correct == input) return "veteran_right"
                 else return "veteran_wrong"
             },
-            valid: char => (char.match(/[1-2]/i) && currentInput.length == 0)
+            valid: char => (char.match(/[1-2]/i) && current.input.length == 0)
         },
         veteran_wrong: {
             template: true,
             confirm: true,
             text: "`Sorry, the correct answer was \"${currentQuestion.choices[currentQuestion.correct - 1]}\" <br><br><br>Press ENTER to continue.`",
             process: input => {
-                negativeMeter++;
+                meters.negative++;
                 trackLength += 40 * 0.75;
-                month++;
+                current.month++;
                 return "veteran_month"
             },
             valid: char => false
@@ -172,9 +177,9 @@ try {
             confirm: true,
             text: "`\"${currentQuestion.choices[currentQuestion.correct - 1]} was the correct option!\" <br><br><br>Press ENTER to continue.`",
             process: input => {
-                positiveMeter++;
+                meters.positive++;
                 trackLength += 40;
-                month++;
+                current.month++;
                 return "veteran_month"
             },
             valid: char => false
@@ -182,7 +187,7 @@ try {
         veteran_month: {
             template: true,
             confirm: true,
-            text: "`You are currently at month ${month}, with ${trackLength} miles done. You have ${1086 - trackLength} to go.<br><br>NE ${generateTrackProgress(1086)}<br><br><br>Press ENTER to continue.`",
+            text: "`You are currently at month ${current.month}, with ${trackLength} miles done. You have ${1086 - trackLength} to go.<br><br>NE ${generateTrackProgress(1086)}<br><br><br>Press ENTER to continue.`",
             process: input => {
                 if (trackLength >= 1086) return "end";
                 else return generateEventVeteran();
@@ -215,20 +220,20 @@ try {
     }
 
     function generateEventImmigrant() {
-        positiveMeter += parseInt(weightedRand({ 0: 0.7, 1: 0.3 }));
-        negativeMeter += parseInt(weightedRand({ 0: 0.7, 1: 0.3 }));
+        meters.positive += parseInt(weightedRand({ 0: 0.7, 1: 0.3 }));
+        meters.negative += parseInt(weightedRand({ 0: 0.7, 1: 0.3 }));
 
-        if (positiveMeter > 8) {
-            currentEvent = positiveEventsImmigrant[Math.floor(Math.random() * 3)]
+        if (meters.positive > 8) {
+            currentEvent = events.immigrant.positive[Math.floor(Math.random() * 3)]
             trackLength += currentEvent.rails;
-            positiveMeter = 0;
+            meters.positive = 0;
             return "immigrant_event";
         }
-        if (negativeMeter > 5) {
-            currentEvent = negativeEventsImmigrant[weightedRand({ 0: 4, 1: 3, 2: 2, 3: 1 })];
+        if (meters.negative > 5) {
+            currentEvent = events.immigrant.negative[weightedRand({ 0: 4, 1: 3, 2: 2, 3: 1 })];
             trackLength -= currentEvent.rails;
-            month += currentEvent.time;
-            negativeMeter = 0;
+            current.month += currentEvent.time;
+            meters.negative = 0;
             return "immigrant_event";
         }
 
@@ -237,20 +242,20 @@ try {
     }
 
     function generateEventVeteran() {
-        positiveMeter += parseInt(weightedRand({ 0: 0.7, 1: 0.3 }));
-        negativeMeter += parseInt(weightedRand({ 0: 0.7, 1: 0.3 }));
+        meters.positive += parseInt(weightedRand({ 0: 0.7, 1: 0.3 }));
+        meters.negative += parseInt(weightedRand({ 0: 0.7, 1: 0.3 }));
 
-        if (positiveMeter > 8) {
-            currentEvent = positiveEventsVeteran[Math.floor(Math.random() * 3)]
+        if (meters.positive > 8) {
+            currentEvent = events.veteran.positive[Math.floor(Math.random() * 3)]
             trackLength += currentEvent.rails;
-            positiveMeter = 0;
+            meters.positive = 0;
             return "veteran_event";
         }
-        if (negativeMeter > 5) {
-            currentEvent = negativeEventsVeteran[weightedRand({ 0: 4, 1: 3, 2: 2, 3: 1 })];
+        if (meters.negative > 5) {
+            currentEvent = events.veteran.negative[weightedRand({ 0: 4, 1: 3, 2: 2, 3: 1 })];
             trackLength -= currentEvent.rails;
-            month += currentEvent.time;
-            negativeMeter = 0;
+            current.month += currentEvent.time;
+            meters.negative = 0;
             return "veteran_event";
         }
 
@@ -299,32 +304,31 @@ try {
     function updateTerminal() {
         //console.log("updateTerminal")
         const text = dialogues[currentDialogue].template ? eval(dialogues[currentDialogue].text) : dialogues[currentDialogue].text;
-        terminal.innerHTML = text + currentInput + (dialogues[currentDialogue].confirm ? "" : "_");
+        terminal.innerHTML = text + current.input + (dialogues[currentDialogue].confirm ? "" : "_");
     }
 
     function addChar(char) {
         //console.log("addChar")
-        if (!dialogues[currentDialogue].valid(currentInput + char)) return;
-        else currentInput += char;
+        if (!dialogues[currentDialogue].valid(current.input + char)) return;
+        else current.input += char;
         updateTerminal();
     }
 
     function deleteChar() {
         //console.log("deleteChar")
-        if (currentInput.length > 0) currentInput = currentInput.slice(0, -1);
+        if (current.input.length > 0) current.input = current.input.slice(0, -1);
         updateTerminal();
     }
 
     function processInput() {
         //console.log("processInput")
-        if (currentInput === "" && (!dialogues[currentDialogue].confirm || dialogues[currentDialogue].empty)) return;
-        currentDialogue = dialogues[currentDialogue].process(currentInput);
-        currentInput = "";
+        if (current.input === "" && (!dialogues[currentDialogue].confirm || dialogues[currentDialogue].empty)) return;
+        currentDialogue = dialogues[currentDialogue].process(current.input);
+        current.input = "";
         updateTerminal();
     }
 
     document.addEventListener("keydown", async event => {
-        alert(JSON.stringify(events));
         if (!songApproved) {
             const audio = new Audio("song.mp3");
             audio.loop = true;
