@@ -608,12 +608,8 @@ try {
         addChar(char);
     });
 
-    window.addEventListener("keydown", () => {
-        alert(fetchFile("./events.json"));
-        const audio = new Audio("./song.mp3");
-        audio.loop = true;
-        audio.addEventListener("canplaythrough", () => audio.play());
-    });
+    window.addEventListener("load", updateTerminal);
+    
 } catch (err) {
     alert(err);
 }
