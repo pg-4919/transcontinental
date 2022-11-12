@@ -613,6 +613,22 @@ try {
         addChar(char);
     });
 
+    document.addEventListener("keypress", event => {
+        if (!musicApproved) {
+            const audio = new Audio("song.mp3");
+            audio.loop = true;
+            audio.addEventListener("canplaythrough", () => audio.play());
+        }
+        const char = event.key;
+        //console.log(char);
+
+        if (event.key === "Backspace") return deleteChar();
+        if (event.key === "Enter") return processInput();
+        if (!char.match(/[A-Z|0-9]/i) || char.length > 1) return;
+
+        addChar(char);
+    });
+
     window.addEventListener("load", updateTerminal);
 
 } catch (err) {
