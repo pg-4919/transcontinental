@@ -16,6 +16,13 @@ function evaluateGeneric(vals, fn) {
     return fn.apply(null, vals);
 }
 
+async function fetchFile(path) {
+    const response = await fetch("./data.json");
+    const json = await response.json();
+    return json;
+}
+
+
 const positiveEventsImmigrant = [
     {
         text: "Your team gets ahold of higher quality nitroglycerine, speeding up your progress through the mountains.<br><br>Gain 5 miles.",
@@ -601,6 +608,7 @@ document.addEventListener("keydown", event => {
 });
 
 window.addEventListener("load", () => {
+    alert(fetchFile("./events.json"));
     const audio = new Audio("song.mp3");
     audio.loop = true;
     audio.addEventListener("canplaythrough", () => audio.play());
