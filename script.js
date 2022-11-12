@@ -11,7 +11,7 @@ try {
 
     const meters = { positive: 0, negative: 0 };
     const current = {
-        dialogue: opening,
+        dialogue: "opening",
         input: "",
         track: 0,
         month: 0,
