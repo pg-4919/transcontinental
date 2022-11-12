@@ -14,7 +14,7 @@ try {
         input: "",
         track: 0,
         month: 0,
-        question
+        question: {}
     };
 
     function evaluateGeneric(vals, fn) {
