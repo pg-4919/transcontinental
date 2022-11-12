@@ -302,13 +302,13 @@ try {
 
     function updateTerminal() {
         //console.log("updateTerminal")
-        const text = dialogues[currentDialogue].template ? eval(dialogues[currentDialogue].text) : dialogues[currentDialogue].text;
-        terminal.innerHTML = text + current.input + (dialogues[currentDialogue].confirm ? "" : "_");
+        const text = dialogues[current.dialogue].template ? eval(dialogues[current.dialogue].text) : dialogues[current.dialogue].text;
+        terminal.innerHTML = text + current.input + (dialogues[current.dialogue].confirm ? "" : "_");
     }
 
     function addChar(char) {
         //console.log("addChar")
-        if (!dialogues[currentDialogue].valid(current.input + char)) return;
+        if (!dialogues[current.dialogue].valid(current.input + char)) return;
         else current.input += char;
         updateTerminal();
     }
@@ -321,8 +321,8 @@ try {
 
     function processInput() {
         //console.log("processInput")
-        if (current.input === "" && (!dialogues[currentDialogue].confirm || dialogues[currentDialogue].empty)) return;
-        currentDialogue = dialogues[currentDialogue].process(current.input);
+        if (current.input === "" && (!dialogues[current.dialogue].confirm || dialogues[current.dialogue].empty)) return;
+        current.dialogue = dialogues[current.dialogue].process(current.input);
         current.input = "";
         updateTerminal();
     }
