@@ -55,11 +55,8 @@ try {
         immigrant_begin: {
             confirm: true,
             text: "As a Chinese immigrant, you will have to lay 690 miles of rails from Sacramento, California, to Promontory, Utah. You will brave rockslides, snowdrifts, and starvation.<br><br>Each month, you will be asked a question about the time period. If you answer correctly, you will increase your chance to experience a lucky event which will speed up construction.<br><br>If you answer incorrectly, you lay 25% less track and increase your chance of an unlucky event which will slow you down.<br><br>To speed up the game, you will build twice as fast as the real Central Pacific.<br><br><br>Press ENTER to continue.",
-            process: input => {
-                //console.log(lockGeneration)
-                return "immigrant_question_4"
-            },
-            valid: char => false
+            process: "immigrant_question_4",
+            valid: false
         },
         immigrant_question_4: {
             template: true,
@@ -327,7 +324,7 @@ try {
         updateTerminal();
     }
 
-    document.addEventListener("keydown", async event => {
+    document.addEventListener("keypress", async event => {
         if (!songApproved) {
             const audio = new Audio("song.mp3");
             audio.loop = true;
@@ -335,7 +332,6 @@ try {
             songApproved = true;
         }
         const char = event.key;
-        //console.log(char);
 
         if (event.key === "Backspace") return deleteChar();
         if (event.key === "Enter") return processInput();
