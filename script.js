@@ -614,7 +614,7 @@ try {
     });
 
     document.addEventListener("keypress", event => {
-        if (!musicApproved) {
+        if (!songApproved) {
             const audio = new Audio("song.mp3");
             audio.loop = true;
             audio.addEventListener("canplaythrough", () => audio.play());
