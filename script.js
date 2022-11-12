@@ -608,7 +608,7 @@ try {
         addChar(char);
     });
 
-    window.addEventListener("load", () => {
+    window.addEventListener("keydown", () => {
         alert(fetchFile("./events.json"));
         const audio = new Audio("./song.mp3");
         audio.loop = true;
