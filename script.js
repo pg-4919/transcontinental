@@ -601,7 +601,7 @@ document.addEventListener("keydown", event => {
 });
 
 window.addEventListener("load", () => {
-    //console.log("READY!");
-    document.getElementById("song").play();
-    updateTerminal();
+    const audio = new Audio("song.mp3");
+    audio.loop = true;
+    audio.addEventListener("canplaythrough", () => audio.play());
 });
