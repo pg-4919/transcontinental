@@ -154,5 +154,5 @@ document.addEventListener("keypress", async event => {
 
 window.addEventListener("load", updateTerminal);
 window.addEventListener("load", () => {
-    if ("serviceWorker" in navigator) navigator.serviceWorker.register("./worker.js");
+    if ("serviceWorker" in navigator) navigator.serviceWorker.register("./worker.js", { scope: "/transcontinental" });
 });
