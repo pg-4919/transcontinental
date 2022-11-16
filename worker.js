@@ -1,4 +1,4 @@
-const cacheName = "TCR-v2";
+const cacheName = "TCR-v2.01";
 
 const files = [
   "icon.png",
@@ -16,7 +16,7 @@ self.addEventListener("install", event => {
   console.log("[Service Worker] Install");
   event.waitUntil((async () => {
     const cache = await caches.open(cacheName);
-    await cache.addAll(contentToCache);
+    await cache.addAll(files);
   })());
 });
 
