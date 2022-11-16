@@ -1,15 +1,16 @@
 {
-  "background_color": "black",
-  "description": "Experience the Transcontinental Railroad in an Oregon Trail-style text based game",
-  "display": "fullscreen",
+  "name": "The Transcontinental Railroad",
+  "short_name": "TCR",
+  "description": "Reexperience the good old days.",
   "icons": [
     {
       "src": "icon.png",
-      "sizes": "192x192",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ],
-  "name": "The Transcontinental Railroad",
-  "short_name": "Transcontinental",
-  "start_url": "/index.html"
+  "start_url": "/",
+  "display": "fullscreen",
+  "theme_color": "#B12A34",
+  "background_color": "#B12A34"
 }
