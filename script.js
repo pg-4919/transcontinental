@@ -41,8 +41,8 @@ try {
         differences: {
             confirm: true,
             text: "Building a transcontinental railroad was no easy task, and both East and West faced difficult challenges.<br><br>If you choose to be a Chinese immigrant, you will have to blast your way through the Rocky Mountains and endure low pay and poor weather, but you will have less distance to cover.<br><br>If you choose to be a Civil War veteran, you will have to brave the hostile Native American tribes and powerful thunderstorms of the Great Plains, as well as a longer distance, but you will be able to lay down track faster. <br><br><br>Press ENTER to continue.",
-            process: "build",
-            valid: false
+            process: input => "build",
+            valid: input => false
         },
         immigrant_name: {
             text: "What is your name? ",
@@ -55,8 +55,8 @@ try {
         immigrant_begin: {
             confirm: true,
             text: "As a Chinese immigrant, you will have to lay 690 miles of rails from Sacramento, California, to Promontory, Utah. You will brave rockslides, snowdrifts, and starvation.<br><br>Each month, you will be asked a question about the time period. If you answer correctly, you will increase your chance to experience a lucky event which will speed up construction.<br><br>If you answer incorrectly, you lay 25% less track and increase your chance of an unlucky event which will slow you down.<br><br>To speed up the game, you will build twice as fast as the real Central Pacific.<br><br><br>Press ENTER to continue.",
-            process: "immigrant_question_4",
-            valid: false
+            process: input => "immigrant_question_4",
+            valid: input => false
         },
         immigrant_question_4: {
             template: true,
@@ -130,7 +130,7 @@ try {
         veteran_begin: {
             confirm: true,
             text: "As a Civil War veteran, you will have to lay 1086 miles of rails from Omaha, Nebraska, to Promontory, Utah. You will have to endure Native American raids and powerful thunderstorms.<br><br>Each month, you will be asked a question about the time period. If you answer correctly, you will increase your chance to experience a lucky event which will speed up construction.<br><br>If you answer incorrectly, you lay 25% less track and increase your chance of an unlucky event which will slow you down.<br><br>To speed up the game, you will build twice as fast as the real Union Pacific.<br><br><br>Press ENTER to continue.",
-            process: "veteran_question_4",
+            process: input => "veteran_question_4",
             valid: char => false
         },
         veteran_question_4: {
@@ -198,17 +198,13 @@ try {
             confirm: true,
             template: true,
             text: "`You completed your side of the railroad in ${month} months, and reached Promontory Point, Utah! (Keep in mind, you went twice as fast as the real railroad companies.)<br><br> Thank you for playing the Transcontinental Railroad.<br><br><br>Press ENTER to play again.`",
-            process: input => {
-                window.location.reload();
-            }
+            process: input => window.location.reload()
         },
     }
 
     function weightedRand(spec) {
-        let i, j, table = [];
-        for (i in spec) {
-            for (j = 0; j < spec[i] * 10; j++) table.push(i);
-        }
+        const table = [];
+        for (let i in spec) for (let j = 0; j < spec[i] * 10; j++) table.push(i);
         return table[Math.floor(Math.random() * table.length)];
     }
 
